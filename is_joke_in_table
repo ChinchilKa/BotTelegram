@@ -1,0 +1,16 @@
+import sqlite3 as sql
+import telebot
+
+
+bot = telebot.TeleBot('TOKEN')
+
+
+@bot.message_handler(content_types=["text"])
+def is_joke_in_table(new_anekdot):
+    con = sql.connect('anek.db')
+    cur = con.cursor()
+    cur.execute("select id from POSTS where id=?", (new_anekdot,))
+    data = cur.fetchall()
+    if data is None:
+        new_anekdot.get_category()
+    con.close()
